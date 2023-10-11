@@ -1,9 +1,26 @@
+const appSettings = {
+  databaseURL:
+    "https://endorsement-app-f571f-default-rtdb.europe-west1.firebasedatabase.app/",
+};
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+
+const app = initializeApp(appSettings);
+const database = getDatabase(app);
+
+import {
+  getDatabase,
+  ref,
+  push,
+} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   const endorsementInputEl = document.querySelector(".endorsement-input");
   const publishBtn = document.querySelector(".btn");
   const listEl = document.querySelector("#endorsements");
   const senderEl = document.querySelector("#sender");
   const recipientEl = document.querySelector("#recipient");
+  const endorsementsInDB = ref(database, "endorsements");
 
   endorsementInputEl.value = "";
   endorsementInputEl.addEventListener("input", function () {
@@ -24,6 +41,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     </li>`;
 
+    const endorsementMessage = {
+      From: senderEl.value,
+      To: recipientEl.value,
+      Message: endorsementInputEl.value,
+    };
+
+    push(endorsementsInDB, endorsementMessage);
     endorsementInputEl.value = "";
     senderEl.value = "";
     recipientEl.value = "";
